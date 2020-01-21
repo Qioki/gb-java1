@@ -22,7 +22,6 @@ checkBalance ([10, || 1, 2, 3, 4]) → true. Абстрактная границ
     public static void main(String[] args) {
 
         // 1
-        Random random = new Random();
         int[] arr = getRandomArray(10, 0, 2);
 
         printArray("1.\n", arr);
@@ -37,17 +36,20 @@ checkBalance ([10, || 1, 2, 3, 4]) → true. Абстрактная границ
 
         // 3
         arr = new int[]{1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1 };
+
         if6Array(arr);
         printArray("3.\n", arr);
 
         // 4
         arr = getRandomArray(20, 0, 20);
+
         printArray("4.\n", arr);
         System.out.println("min: " + findMin(arr));
         System.out.println("max: " + findMax(arr));
 
         // 5
         int[][] arr2 = new int[10][10];
+        
         drawOnMatrixX(arr2);
         System.out.println("5.");
         for (int i = 0; i < arr2.length; i++) {
@@ -59,12 +61,73 @@ checkBalance ([10, || 1, 2, 3, 4]) → true. Абстрактная границ
         System.out.println("6.\n" + checkBalance(arr));
 
         // 7
-//        int n = 3;
-//        arr = getRandomArray(10, 0, 10);
+        arr = getRandomArray(10, 0, 10);
 
+        printArray("7\nStart: ", arr);
+        cyclicShiftArr(arr, -3);
+        printArray("End: ", arr);
 
+        // 8
+        arr = getRandomArray(10, 0, 10);
+
+        printArray("8\nStart: ", arr);
+        cyclicShiftArr_noArray(arr, 4);
+        printArray("End: ", arr);
     }
 
+
+    static void cyclicShiftArr_noArray(int[] arr, int n) {  
+
+        int direction = n > 0 ? 1 : -1;
+        n = Math.abs(n);
+        int helper;
+
+        for (int i = 0; i < n; i++) {
+            if(direction < 0) {
+                helper = arr[0];
+                for (int j = 0; j < arr.length; j++) {
+                    arr[j] = arr[(j - direction + arr.length) % arr.length];
+                }
+                arr[arr.length - 1] = helper;  
+            }
+            else {
+                helper = arr[arr.length - 1];
+                for (int j = arr.length-1; j >= 0; j--) {
+                    arr[j] = arr[(j - direction + arr.length) % arr.length]; 
+                } 
+                arr[0] = helper;  
+            }
+            printArray("", arr);
+        }
+    }
+
+    static void cyclicShiftArr(int[] arr, int n) {  
+
+        int direction = n > 0 ? 1 : -1;
+        n = Math.abs(n);
+
+        int[] newArr = new int[arr.length];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                newArr[(j + direction + arr.length) % arr.length] = arr[j];
+            }
+            for (int j = 0; j < arr.length; j++) { 
+                arr[j] = newArr[j];
+            }
+            printArray("", arr);
+        }
+    }
+
+    static void oneActShiftArr(int[] arr, int n) {  
+        
+        if(n < 0)
+            n = n % arr.length + arr.length;
+
+        int[] newArr = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            newArr[(i + n) % arr.length] = arr[i];
+        }
+    }
 
     static boolean checkBalance(int[] arr) {
         int rightSide = 0;
