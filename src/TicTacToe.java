@@ -56,7 +56,6 @@ public class TicTacToe {
     }
     
     private static boolean checkWin(char c) {
-        //return checkField(c, winnerLineLength)[3] <= 1;
         int[] result = checkField(c);
         return result.length != 0 && result[2] == 0;
     }
@@ -82,7 +81,6 @@ public class TicTacToe {
             if(temp.length != 0 && temp[2] < bestChoice[2])
                 bestChoice = temp;
         }
-        //System.out.println(Arrays.toString(bestChoice));
         return bestChoice;
     }
 
@@ -93,7 +91,6 @@ public class TicTacToe {
             (y + vector[1]*length < -1)) 
             return new int[0];
 
-        //System.out.println("@@@");
         int [] emptyHere = new int[3];
         int emptyCount = 0;
         for (int i = 0; i < length; i++) {
@@ -109,56 +106,21 @@ public class TicTacToe {
         return emptyHere;
     } 
 
-    private static int[] checkField(char c, int lineLength) {
-        int[] bestChoice = new int[]{0, 0, 0, 999};
-        for (int i = 0; i < fieldSizeY; i++) {
-            for (int j = 0; j < fieldSizeX; j++) {
-                if(field[j][i] == c) {
-                    int[] coo = checkArea(c, i, j, lineLength);
-                    if (coo[3] == 1) {
-                        return coo;
-                    }
-                    if(coo[3] < bestChoice[3]) {
-                        bestChoice = coo;                
-                    }
-                }
-            }
-        }
-        return bestChoice;
-    }
-    private static int[] checkArea(char c, int x, int y, int lineLength) {
-        int minLength = 999;
-        int bestLineId = 0;
-        for (int i = 0; i < vectors.length; i++) {
-
-            int length = checkLine(c, x, y, vectors[i], lineLength);
-
-            if(minLength > length) {
-                minLength = length;
-                bestLineId = i;
-            }
-        }
-        System.out.println(Arrays.toString(vectors[bestLineId]));
-        System.out.println(minLength);
-        return  new int[]{ x, y, bestLineId, minLength}; 
-    }
-    private static int checkLine(char c, int x, int y, int[] vector, int length) {
-        if(x >= fieldSizeX || y >= fieldSizeY || x < 0 || y < 0 || field[y][x] != c) return length + 1;
-        return length > 1 ? checkLine(c, x+vector[0], y+vector[1], vector, length-1) : 1;
-    } 
-
     private static void aiTurn() {
-        int caution = 1;  
+
         int x = RANDOM.nextInt(fieldSizeX);
         int y = RANDOM.nextInt(fieldSizeY);
 
         int[] humanState = checkField(DOT_HUMAN);
-        if(humanState[2] <= caution) {
+        System.out.println(Arrays.toString(humanState));
+        int[] aiState = checkField(DOT_AI);
+        System.out.println(Arrays.toString(aiState));
+
+        if(humanState[2] < aiState[2]) {
             x = humanState[1];
             y = humanState[0];
         }
-        int[] aiState = checkField(DOT_HUMAN);
-        if(aiState[2] == 1) {
+        else if(aiState[2] < winnerLineLength) {
             x = aiState[1];
             y = aiState[0];
         }
